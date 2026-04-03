@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Generosity</string>
+
+    //Text labels
+    <string name="app_action_label">Donation Calculation</string>
+    <string name="amount_label">Income</string>
+    <string name="percentage_label">Portion</string>
+    <string name="result_amount_label">Donation Amount: %s</string>
+
+    //Buttons label
+    //RoundUp levels
+    <string name="level0">1x</string>
+    <string name="level1">10x</string>
+    <string name="level2">100x</string>
+    <string name="level3">1000x</string>
+    //Submission button
+    <string name="submit_button">Calculation</string>
+</resources>
