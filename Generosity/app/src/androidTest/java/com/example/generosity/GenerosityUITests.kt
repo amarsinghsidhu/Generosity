@@ -157,7 +157,7 @@ class GenerosityUITests {
             }
         }
 
-        composeTestRule.onNodeWithText("Income").performTextInput("${generosity.income}")
+        composeTestRule.onNodeWithText("Income").performTextInput("18043")
     }
     // End of TextFieldModule(...) function testing
 

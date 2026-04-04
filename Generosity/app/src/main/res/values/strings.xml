@@ -13,6 +13,8 @@
     <string name="level1">10x</string>
     <string name="level2">100x</string>
     <string name="level3">1000x</string>
+    //Fix Portion
+    <string name="fixPortion_label">Daswandh (10%)</string>
     //Submission button
     <string name="submit_button">Calculation</string>
 </resources>

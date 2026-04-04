@@ -130,6 +130,21 @@ class GenerosityTests {
         )
         assertEquals(targetDonation, actualDonation, 0.0001)
     }
+
+    @Test
+    fun calculation_fixPortion_noRoundUp() {
+        val targetDonation = 1804.3
+        val actualDonation = calculation(
+            18043.0,
+            10.0,
+            false,
+            false,
+            false,
+            false
+        )
+        assertEquals(targetDonation, actualDonation, 0.0001)
+    }
+
     @Test
     fun randomColor_generosity1() {
         randomColor()
