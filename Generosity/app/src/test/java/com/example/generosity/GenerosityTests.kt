@@ -49,9 +49,37 @@ class GenerosityTests {
         generosity4.roundUpTens = true
         generosity4.roundUpThousands = true
         touchHandling(generosity4, keyEvent)
-        assertEquals(false,generosity3.roundUpTens)
+        assertEquals(false, generosity3.roundUpTens)
         assertEquals(false, generosity3.roundUpThousands)
         assertEquals(true, generosity3.roundUpHundreds)
+    }
+
+    @Test
+    fun touchHandling_benefits() {
+        val keyEvent = "Benefits"
+        touchHandling(generosity, keyEvent)
+        assertEquals(true, generosity.benefitsPage)
+    }
+
+    @Test
+    fun touchHandling_fixPortion() {
+        val keyEvent = "Fix Portion"
+        touchHandling(generosity, keyEvent)
+        assertEquals(true, generosity.fixPortion)
+    }
+
+    @Test
+    fun touchHandling_variablePortion() {
+        val keyEvent = "Variable Portion"
+        touchHandling(generosity, keyEvent)
+        assertEquals(true, generosity.variablePortion)
+    }
+
+    @Test
+    fun touchHandling_backButton() {
+        val keyEvent = "Back"
+        touchHandling(generosity, keyEvent)
+        assertEquals(true, generosity.landingPage)
     }
 
     //Start of toggle() function testing

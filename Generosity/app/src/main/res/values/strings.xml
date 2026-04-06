@@ -1,20 +1,56 @@
 <resources>
     <string name="app_name">Generosity</string>
 
+    //Landing Page
+    <string name="app_name_pali">Dāna</string>
+    <string name="button1">Benefits</string> //Benefits of Donation button
+    <string name="button2">Daswandh Calculation</string> //Fix Portion
+    <string name="button3">Generosity Calculation</string>
+
+    //Variable Portion Page
+    //Calculation page
     //Text labels
     <string name="app_action_label">Donation Calculation</string>
     <string name="amount_label">Income</string>
     <string name="percentage_label">Portion</string>
     <string name="result_amount_label">Donation Amount: %s</string>
-
     //Buttons label
     //RoundUp levels
     <string name="level0">1x</string>
     <string name="level1">10x</string>
     <string name="level2">100x</string>
     <string name="level3">1000x</string>
-    //Fix Portion
-    <string name="fixPortion_label">Daswandh (10%)</string>
+
+    //Fix Portion Page
+    <string name="sikhi_logo_description">Ik Onkar</string>
+
+    //Back Button
+    <string name="back">Back</string>
+
     //Submission button
     <string name="submit_button">Calculation</string>
+
+    //Benefits Page
+    //Heading text
+    <string name="title">A Gift With Six Factors</string>
+    <string name="subtitle">Chaḷaṅgadānasutta</string>
+    <string name="heading1">Six factors of a religious donation:</string>
+    <string name="subheading1">1. Three factors of the donor</string>
+    <string name="sh1_contents">
+        a. Before Donation: Good Mood\n
+        b. Whilst donation: Feeling of confidence\n
+        c. After donation: Feeling of upliftment
+    </string>
+    <string name="subheading2">2. Three factors of the recipient</string>
+    <string name="sh2_contents">
+        a. No greed (or practice in progress for freedom from greed)\n
+        b. No hatred (or practice in progress for freedom from hatred)\n
+        c. No Delusion (or practice in progress for freedom from delusion)
+    </string>
+    <string name="heading2">Benefits:</string>
+    <string name="h2_contents">
+        Beyond calculation, measurement, a great mass of merit.\n
+        Simile: Grasp of whole of the water of the ocean
+    </string>
+    <string name="source">- Source: Aṅguttara Nikāya 6.37</string>
 </resources>
