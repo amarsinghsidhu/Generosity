@@ -1,4 +1,4 @@
-package com.example.generosity.ui.theme
+package com.vipassanaanubhava.generosity.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

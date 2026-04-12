@@ -1,4 +1,4 @@
-package com.example.generosity
+package com.vipassanaanubhava.generosity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,7 +16,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -48,7 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.generosity.ui.theme.GenerosityTheme
+import com.vipassanaanubhava.generosity.ui.theme.GenerosityTheme
 import org.jetbrains.annotations.VisibleForTesting
 import java.text.NumberFormat
 import kotlin.math.ceil
@@ -499,24 +500,12 @@ fun BigBang() {
 @Composable
 fun Render(generosity: Generosity) {
     if (generosity.landingPage) {
-//        generosity.fixPortion = false
-//        generosity.variablePortion = false
-//        generosity.benefitsPage = false
         IndexRendering(generosity)
     } else if (generosity.benefitsPage) {
-//        generosity.landingPage
-//        generosity.fixPortion = false
-//        generosity.variablePortion = false
-        BenefitsRendering(generosity)
+        BenefitsRendering()
     } else if (generosity.variablePortion) {
-//        generosity.landingPage = false
-//        generosity.benefitsPage = false
-//        generosity.fixPortion = false
         CalculationRendering(generosity)
     } else if (generosity.fixPortion) {
-//        generosity.variablePortion = false
-//        generosity.landingPage = false
-//        generosity.benefitsPage = false
         CalculationRendering(generosity)
     }
 }
@@ -532,10 +521,10 @@ fun IndexRendering(generosity: Generosity) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .wrapContentSize()
             .fillMaxSize()
             .background(color = colorResource(generosity.backgroundColor))
             .verticalScroll(rememberScrollState())
+            .padding(16.dp)
     ) {
         Text(
             text = stringResource(R.string.app_name),
@@ -588,18 +577,16 @@ fun IndexRendering(generosity: Generosity) {
 //}
 
 @Composable
-fun BenefitsRendering(generosity: Generosity) {
-
-    if (generosity.landingPage) IndexRendering(generosity)
+fun BenefitsRendering() {
 
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .wrapContentSize()
             .fillMaxSize()
             .background(color = colorResource(R.color.ochre))
             .verticalScroll(rememberScrollState())
+            .padding(16.dp)
     ) {
         Text(
             text = stringResource(R.string.title),
@@ -712,8 +699,6 @@ fun BenefitsRendering(generosity: Generosity) {
 @Composable
 internal fun CalculationRendering(generosity: Generosity) {
 
-    if (generosity.landingPage) IndexRendering(generosity)
-
     var incomeAmount by remember { mutableStateOf("") }
     var portionAmount by remember { mutableStateOf("") }
 
@@ -723,24 +708,25 @@ internal fun CalculationRendering(generosity: Generosity) {
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = if (generosity.variablePortion) {
-            Modifier
-                .wrapContentSize()
-                .fillMaxSize()
-                .background(color = colorResource(generosity.backgroundColor))
-                .verticalScroll(rememberScrollState())
-        } else {
-            Modifier
-                .wrapContentSize()
-                .fillMaxSize()
-                .background(color = colorResource(R.color.saffron))
-                .verticalScroll(rememberScrollState())
-        }
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                    color = if (generosity.variablePortion) {
+                        colorResource(generosity.backgroundColor)
+                    } else {
+                        colorResource(R.color.saffron)
+                    }
+                )
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)
     ) {
         if (generosity.fixPortion) {
             Image(
                 painter = painterResource(R.drawable.ikonkar),
-                contentDescription = stringResource(R.string.sikhi_logo_description)
+                contentDescription = stringResource(R.string.sikhi_logo_description),
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .size(120.dp)
             )
         } else {
             Text(
@@ -781,8 +767,7 @@ internal fun CalculationRendering(generosity: Generosity) {
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .wrapContentSize()
-                .fillMaxSize()
+                .fillMaxWidth()
         ) {
             Text(
                 text = "Amount Round Up?",
@@ -853,6 +838,7 @@ internal fun CalculationRendering(generosity: Generosity) {
             fontFamily = MaterialTheme.typography.headlineMedium.fontFamily,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
+                .padding(top = 16.dp)
         )
         CalculationButtons(
             label = R.string.submit_button,

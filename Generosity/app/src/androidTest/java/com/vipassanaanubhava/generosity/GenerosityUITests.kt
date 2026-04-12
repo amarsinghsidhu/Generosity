@@ -1,10 +1,22 @@
-package com.example.generosity
+package com.vipassanaanubhava.generosity
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import com.example.generosity.ui.theme.GenerosityTheme
+import com.vipassanaanubhava.generosity.ui.theme.GenerosityTheme
+import com.vipassanaanubhava.generosity.Render
+import com.vipassanaanubhava.generosity.generosity
+import com.vipassanaanubhava.generosity.onBack
+import com.vipassanaanubhava.generosity.onBenefits
+import com.vipassanaanubhava.generosity.onCalculation
+import com.vipassanaanubhava.generosity.onFixPortion
+import com.vipassanaanubhava.generosity.onRoundUpHundreds
+import com.vipassanaanubhava.generosity.onRoundUpOnes
+import com.vipassanaanubhava.generosity.onRoundUpTens
+import com.vipassanaanubhava.generosity.onRoundUpThousands
+import com.vipassanaanubhava.generosity.onVariablePortion
+import com.vipassanaanubhava.generosity.touchHandling
 import org.junit.Rule
 import org.junit.Test
 import java.text.NumberFormat
@@ -49,9 +61,10 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onBack = {
-                        generosity -> touchHandling(
-                    generosity, "Back"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Back"
+                    )
                 }
             }
         }
@@ -73,9 +86,10 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onBack = {
-                        generosity -> touchHandling(
-                    generosity, "Back"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Back"
+                    )
                 }
             }
         }
@@ -101,8 +115,9 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onCalculation = {
-                    generosity -> touchHandling(
-                    generosity, "Calculation"
+                    generosity ->
+                    touchHandling(
+                        generosity, "Calculation"
                     )
                 }
             }
@@ -126,9 +141,10 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onVariablePortion = {
-                        generosity -> touchHandling(
-                    generosity, "Variable Portion"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Variable Portion"
+                    )
                 }
             }
         }
@@ -171,9 +187,10 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onBenefits = {
-                        generosity -> touchHandling(
-                    generosity, "Benefits"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Benefits"
+                    )
                 }
             }
         }
@@ -229,7 +246,8 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onCalculation = {
-                        generosity -> touchHandling(generosity, "Calculation")
+                        generosity ->
+                    touchHandling(generosity, "Calculation")
                 }
             }
         }
@@ -254,7 +272,8 @@ class GenerosityUITests {
 
                 onRoundUpOnes = { generosity -> touchHandling(generosity, "Ones") }
                 onCalculation = {
-                        generosity -> touchHandling(generosity, "Calculation")
+                        generosity ->
+                    touchHandling(generosity, "Calculation")
                 }
             }
         }
@@ -283,7 +302,8 @@ class GenerosityUITests {
 
                 onRoundUpTens = { generosity -> touchHandling(generosity, "Tens") }
                 onCalculation = {
-                        generosity -> touchHandling(generosity, "Calculation")
+                        generosity ->
+                    touchHandling(generosity, "Calculation")
                 }
             }
         }
@@ -311,10 +331,12 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onRoundUpHundreds = {
-                        generosity -> touchHandling(generosity, "Hundreds")
+                        generosity ->
+                    touchHandling(generosity, "Hundreds")
                 }
                 onCalculation = {
-                        generosity -> touchHandling(generosity, "Calculation")
+                        generosity ->
+                    touchHandling(generosity, "Calculation")
                 }
             }
         }
@@ -342,14 +364,16 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onRoundUpThousands = {
-                        generosity -> touchHandling(
-                    generosity, "Thousands"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Thousands"
+                    )
                 }
                 onCalculation = {
-                        generosity -> touchHandling(
-                    generosity, "Calculation"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Calculation"
+                    )
                 }
             }
         }
@@ -419,9 +443,10 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onRoundUpHundreds = {
-                        generosity -> touchHandling(
-                    generosity, "Hundreds"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Hundreds"
+                    )
                 }
             }
         }
@@ -442,9 +467,10 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onRoundUpThousands = {
-                        generosity -> touchHandling(
-                    generosity, "Thousands"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Thousands"
+                    )
                 }
             }
         }
@@ -484,9 +510,10 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onFixPortion = {
-                        generosity -> touchHandling(
-                    generosity, "Fix Portion"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Fix Portion"
+                    )
                 }
             }
         }
@@ -507,9 +534,10 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onVariablePortion = {
-                        generosity -> touchHandling(
-                    generosity, "Variable Portion"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Variable Portion"
+                    )
                 }
             }
         }
@@ -530,19 +558,22 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onVariablePortion = {
-                        generosity -> touchHandling(
-                    generosity, "Variable Portion"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Variable Portion"
+                    )
                 }
                 onFixPortion = {
-                        generosity -> touchHandling(
-                    generosity, "Fix Portion"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Fix Portion"
+                    )
                 }
                 onBenefits = {
-                        generosity -> touchHandling(
-                    generosity, "Benefits"
-                )
+                        generosity ->
+                    touchHandling(
+                        generosity, "Benefits"
+                    )
                 }
                 onBack = { generosity -> touchHandling(generosity, "Back") }
             }

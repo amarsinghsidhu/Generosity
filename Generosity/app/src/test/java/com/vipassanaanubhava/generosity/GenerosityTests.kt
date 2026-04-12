@@ -1,5 +1,14 @@
-package com.example.generosity
+package com.vipassanaanubhava.generosity
 
+import com.vipassanaanubhava.generosity.calculation
+import com.vipassanaanubhava.generosity.generosity
+import com.vipassanaanubhava.generosity.generosity1
+import com.vipassanaanubhava.generosity.generosity2
+import com.vipassanaanubhava.generosity.generosity3
+import com.vipassanaanubhava.generosity.generosity4
+import com.vipassanaanubhava.generosity.randomColor
+import com.vipassanaanubhava.generosity.toggle
+import com.vipassanaanubhava.generosity.touchHandling
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Test
@@ -141,7 +150,8 @@ class GenerosityTests {
             false,
             false,
             true,
-            false)
+            false
+        )
         assertEquals(targetDonation, actualDonation, 0.0001)
     }
 
