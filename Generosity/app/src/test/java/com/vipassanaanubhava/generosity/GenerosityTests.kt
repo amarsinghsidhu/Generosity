@@ -1,14 +1,5 @@
 package com.vipassanaanubhava.generosity
 
-import com.vipassanaanubhava.generosity.calculation
-import com.vipassanaanubhava.generosity.generosity
-import com.vipassanaanubhava.generosity.generosity1
-import com.vipassanaanubhava.generosity.generosity2
-import com.vipassanaanubhava.generosity.generosity3
-import com.vipassanaanubhava.generosity.generosity4
-import com.vipassanaanubhava.generosity.randomColor
-import com.vipassanaanubhava.generosity.toggle
-import com.vipassanaanubhava.generosity.touchHandling
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Test
@@ -71,10 +62,17 @@ class GenerosityTests {
     }
 
     @Test
-    fun touchHandling_fixPortion() {
-        val keyEvent = "Fix Portion"
+    fun touchHandling_fixPortionTen() {
+        val keyEvent = "Fix Portion 10"
         touchHandling(generosity, keyEvent)
-        assertEquals(true, generosity.fixPortion)
+        assertEquals(true, generosity.fixPortionTen)
+    }
+
+    @Test
+    fun touchHandling_fixPortionTwoFive() {
+        val keyEvent = "Fix Portion 2.5"
+        touchHandling(generosity, keyEvent)
+        assertEquals(true, generosity.fixPortionTwoFive)
     }
 
     @Test
@@ -170,11 +168,25 @@ class GenerosityTests {
     }
 
     @Test
-    fun calculation_fixPortion_noRoundUp() {
+    fun calculation_fixPortionTen_noRoundUp() {
         val targetDonation = 1804.3
         val actualDonation = calculation(
             18043.0,
             10.0,
+            false,
+            false,
+            false,
+            false
+        )
+        assertEquals(targetDonation, actualDonation, 0.0001)
+    }
+
+    @Test
+    fun calculation_fixPortionTwoFive_noRoundUp() {
+        val targetDonation = 451.075
+        val actualDonation = calculation(
+            18043.0,
+            2.5,
             false,
             false,
             false,

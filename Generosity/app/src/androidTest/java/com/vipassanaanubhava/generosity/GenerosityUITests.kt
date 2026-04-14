@@ -5,18 +5,6 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.vipassanaanubhava.generosity.ui.theme.GenerosityTheme
-import com.vipassanaanubhava.generosity.Render
-import com.vipassanaanubhava.generosity.generosity
-import com.vipassanaanubhava.generosity.onBack
-import com.vipassanaanubhava.generosity.onBenefits
-import com.vipassanaanubhava.generosity.onCalculation
-import com.vipassanaanubhava.generosity.onFixPortion
-import com.vipassanaanubhava.generosity.onRoundUpHundreds
-import com.vipassanaanubhava.generosity.onRoundUpOnes
-import com.vipassanaanubhava.generosity.onRoundUpTens
-import com.vipassanaanubhava.generosity.onRoundUpThousands
-import com.vipassanaanubhava.generosity.onVariablePortion
-import com.vipassanaanubhava.generosity.touchHandling
 import org.junit.Rule
 import org.junit.Test
 import java.text.NumberFormat
@@ -29,7 +17,8 @@ class GenerosityUITests {
     @Test
     fun render_indexPageBack_from_benefitsPage() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = true
         composeTestRule.setContent {
@@ -47,21 +36,22 @@ class GenerosityUITests {
 
         composeTestRule.onNodeWithText("Benefits").assertIsDisplayed()
         composeTestRule.onNodeWithText("Daswandh Calculation").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Zakat Calculation").assertIsDisplayed()
         composeTestRule.onNodeWithText("Generosity Calculation").assertIsDisplayed()
     }
 
     @Test
     fun render_indexPageBack_from_DaswandhCalculationPage() {
         generosity.landingPage = false
-        generosity.fixPortion = true
+        generosity.fixPortionTen = true
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = false
         composeTestRule.setContent {
             GenerosityTheme {
                 Render(generosity)
 
-                onBack = {
-                        generosity ->
+                onBack = { generosity ->
                     touchHandling(
                         generosity, "Back"
                     )
@@ -72,21 +62,48 @@ class GenerosityUITests {
 
         composeTestRule.onNodeWithText("Benefits").assertIsDisplayed()
         composeTestRule.onNodeWithText("Daswandh Calculation").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Zakat Calculation").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Generosity Calculation").assertIsDisplayed()
+    }
+
+    @Test
+    fun render_indexPageBack_from_ZakatCalculationPage() {
+        generosity.landingPage = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = true
+        generosity.variablePortion = false
+        generosity.benefitsPage = false
+        composeTestRule.setContent {
+            GenerosityTheme {
+                Render(generosity)
+
+                onBack = { generosity ->
+                    touchHandling(
+                        generosity, "Back"
+                    )
+                }
+            }
+        }
+        composeTestRule.onNodeWithText("Back").performClick()
+
+        composeTestRule.onNodeWithText("Benefits").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Daswandh Calculation").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Zakat Calculation").assertIsDisplayed()
         composeTestRule.onNodeWithText("Generosity Calculation").assertIsDisplayed()
     }
 
     @Test
     fun render_indexPageBack_from_variablePortionCalculationPage() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
             GenerosityTheme {
                 Render(generosity)
 
-                onBack = {
-                        generosity ->
+                onBack = { generosity ->
                     touchHandling(
                         generosity, "Back"
                     )
@@ -97,13 +114,15 @@ class GenerosityUITests {
 
         composeTestRule.onNodeWithText("Benefits").assertIsDisplayed()
         composeTestRule.onNodeWithText("Daswandh Calculation").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Zakat Calculation").assertIsDisplayed()
         composeTestRule.onNodeWithText("Generosity Calculation").assertIsDisplayed()
     }
 
     @Test
-    fun render_calculationPage_fixPortion_noRoundUp() {
+    fun render_calculationPage_fixPortionTen_noRoundUp() {
         generosity.landingPage = false
-        generosity.fixPortion = true
+        generosity.fixPortionTen = true
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = false
         generosity.roundUpOnes = false
@@ -114,8 +133,7 @@ class GenerosityUITests {
             GenerosityTheme {
                 Render(generosity)
 
-                onCalculation = {
-                    generosity ->
+                onCalculation = { generosity ->
                     touchHandling(
                         generosity, "Calculation"
                     )
@@ -133,15 +151,15 @@ class GenerosityUITests {
     @Test
     fun render_calculationPage_variablePortion_noRoundUp() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
             GenerosityTheme {
                 Render(generosity)
 
-                onVariablePortion = {
-                        generosity ->
+                onVariablePortion = { generosity ->
                     touchHandling(
                         generosity, "Variable Portion"
                     )
@@ -159,11 +177,11 @@ class GenerosityUITests {
         composeTestRule.onNodeWithText("Back").assertIsDisplayed()
     }
 
-    // Start of Index(...) function tests
     @Test
     fun indexRendering() {
         generosity.landingPage = true
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -173,21 +191,23 @@ class GenerosityUITests {
         }
         composeTestRule.onNodeWithText("Benefits").assertIsDisplayed()
         composeTestRule.onNodeWithText("Daswandh Calculation").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Zakat Calculation").assertIsDisplayed()
         composeTestRule.onNodeWithText("Generosity Calculation").assertIsDisplayed()
     }
 
+    //NavigationButtons Benefits button
     @Test
     fun indexRendering_to_benefitsPage() {
         generosity.landingPage = true
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = false
         composeTestRule.setContent {
             GenerosityTheme {
                 Render(generosity)
 
-                onBenefits = {
-                        generosity ->
+                onBenefits = { generosity ->
                     touchHandling(
                         generosity, "Benefits"
                     )
@@ -201,7 +221,8 @@ class GenerosityUITests {
     @Test
     fun benefitsRendering() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = true
         composeTestRule.setContent {
@@ -230,11 +251,67 @@ class GenerosityUITests {
         composeTestRule.onNodeWithText("Back").assertIsDisplayed()
     }
 
-    // Start of Render(...) function tests
+    @Test
+    fun calculationRendering_fixPortionTen_noRoundUp() {
+        generosity.landingPage = false
+        generosity.fixPortionTen = true
+        generosity.fixPortionTwoFive = false
+        generosity.variablePortion = false
+        generosity.benefitsPage = false
+        generosity.roundUpOnes = false
+        generosity.roundUpTens = false
+        generosity.roundUpHundreds = false
+        generosity.roundUpThousands = false
+        composeTestRule.setContent {
+            GenerosityTheme {
+                Render(generosity)
+
+                onCalculation = { generosity ->
+                    touchHandling(generosity, "Calculation")
+                }
+            }
+        }
+        composeTestRule.onNodeWithText("Income").performTextInput("18043")
+
+        composeTestRule.onNodeWithText("Calculation").performClick()
+        val targetDonation = NumberFormat.getCurrencyInstance().format(1804.3)
+        composeTestRule.onNodeWithText("Donation Amount: $targetDonation")
+            .assertExists("No node with such text.")
+    }
+
+    @Test
+    fun calculationRendering_fixPortionTwoFive_noRoundUp() {
+        generosity.landingPage = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = true
+        generosity.variablePortion = false
+        generosity.benefitsPage = false
+        generosity.roundUpOnes = false
+        generosity.roundUpTens = false
+        generosity.roundUpHundreds = false
+        generosity.roundUpThousands = false
+        composeTestRule.setContent {
+            GenerosityTheme {
+                Render(generosity)
+
+                onCalculation = { generosity ->
+                    touchHandling(generosity, "Calculation")
+                }
+            }
+        }
+        composeTestRule.onNodeWithText("Income").performTextInput("18043")
+
+        composeTestRule.onNodeWithText("Calculation").performClick()
+        val targetDonation = NumberFormat.getCurrencyInstance().format(451.075)
+        composeTestRule.onNodeWithText("Donation Amount: $targetDonation")
+            .assertExists("No node with such text.")
+    }
+
     @Test
     fun calculationRendering_variablePortion_noRoundUp() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         generosity.roundUpOnes = false
@@ -245,8 +322,7 @@ class GenerosityUITests {
             GenerosityTheme {
                 Render(generosity)
 
-                onCalculation = {
-                        generosity ->
+                onCalculation = { generosity ->
                     touchHandling(generosity, "Calculation")
                 }
             }
@@ -263,7 +339,8 @@ class GenerosityUITests {
     @Test
     fun calculationRendering_variablePortion_RoundUpOnes() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -271,8 +348,7 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onRoundUpOnes = { generosity -> touchHandling(generosity, "Ones") }
-                onCalculation = {
-                        generosity ->
+                onCalculation = { generosity ->
                     touchHandling(generosity, "Calculation")
                 }
             }
@@ -293,7 +369,8 @@ class GenerosityUITests {
     @Test
     fun calculationRendering_variablePortion_roundUpTens() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -301,8 +378,7 @@ class GenerosityUITests {
                 Render(generosity)
 
                 onRoundUpTens = { generosity -> touchHandling(generosity, "Tens") }
-                onCalculation = {
-                        generosity ->
+                onCalculation = { generosity ->
                     touchHandling(generosity, "Calculation")
                 }
             }
@@ -323,19 +399,18 @@ class GenerosityUITests {
     @Test
     fun calculationRendering_variablePortion_roundUpHundreds() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
             GenerosityTheme {
                 Render(generosity)
 
-                onRoundUpHundreds = {
-                        generosity ->
+                onRoundUpHundreds = { generosity ->
                     touchHandling(generosity, "Hundreds")
                 }
-                onCalculation = {
-                        generosity ->
+                onCalculation = { generosity ->
                     touchHandling(generosity, "Calculation")
                 }
             }
@@ -356,21 +431,20 @@ class GenerosityUITests {
     @Test
     fun calculationRendering_variablePortion_onRoundUpThousands() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
             GenerosityTheme {
                 Render(generosity)
 
-                onRoundUpThousands = {
-                        generosity ->
+                onRoundUpThousands = { generosity ->
                     touchHandling(
                         generosity, "Thousands"
                     )
                 }
-                onCalculation = {
-                        generosity ->
+                onCalculation = { generosity ->
                     touchHandling(
                         generosity, "Calculation"
                     )
@@ -390,13 +464,11 @@ class GenerosityUITests {
 
     }
 
-    // End of Render(...) function Tests
-
-    // Start of Buttons(...) function testing
     @Test
     fun calculationButtons_Ones() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -415,7 +487,8 @@ class GenerosityUITests {
     @Test
     fun calculationButtons_Tens() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -434,7 +507,8 @@ class GenerosityUITests {
     @Test
     fun calculationButtons_Hundreds() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -442,8 +516,7 @@ class GenerosityUITests {
 
                 Render(generosity)
 
-                onRoundUpHundreds = {
-                        generosity ->
+                onRoundUpHundreds = { generosity ->
                     touchHandling(
                         generosity, "Hundreds"
                     )
@@ -458,7 +531,8 @@ class GenerosityUITests {
     @Test
     fun calculationButtons_Thousands() {
         generosity.landingPage = false
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -466,8 +540,7 @@ class GenerosityUITests {
 
                 Render(generosity)
 
-                onRoundUpThousands = {
-                        generosity ->
+                onRoundUpThousands = { generosity ->
                     touchHandling(
                         generosity, "Thousands"
                     )
@@ -482,7 +555,8 @@ class GenerosityUITests {
     @Test
     fun navigationButtons_indexPage_to_benefitsPage() {
         generosity.landingPage = true
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -499,9 +573,10 @@ class GenerosityUITests {
     }
 
     @Test
-    fun navigationButtons_indexPage_to_fixPortionPage() {
+    fun navigationButtons_indexPage_to_fixPortionTenPage() {
         generosity.landingPage = true
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -509,23 +584,23 @@ class GenerosityUITests {
 
                 Render(generosity)
 
-                onFixPortion = {
-                        generosity ->
+                onFixPortionTen = { generosity ->
                     touchHandling(
-                        generosity, "Fix Portion"
+                        generosity, "Fix Portion 10"
                     )
                 }
             }
         }
 
         composeTestRule.onNodeWithText("Daswandh Calculation").performClick()
-        assert(generosity.fixPortion)
+        assert(generosity.fixPortionTen)
     }
 
     @Test
     fun navigationButtons_indexPage_to_variablePortionPage() {
         generosity.landingPage = true
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -533,8 +608,7 @@ class GenerosityUITests {
 
                 Render(generosity)
 
-                onVariablePortion = {
-                        generosity ->
+                onVariablePortion = { generosity ->
                     touchHandling(
                         generosity, "Variable Portion"
                     )
@@ -549,7 +623,8 @@ class GenerosityUITests {
     @Test
     fun navigationButtons_backButton() {
         generosity.landingPage = true
-        generosity.fixPortion = false
+        generosity.fixPortionTen = false
+        generosity.fixPortionTwoFive = false
         generosity.variablePortion = false
         generosity.benefitsPage = false
         composeTestRule.setContent {
@@ -557,20 +632,22 @@ class GenerosityUITests {
 
                 Render(generosity)
 
-                onVariablePortion = {
-                        generosity ->
+                onVariablePortion = { generosity ->
                     touchHandling(
                         generosity, "Variable Portion"
                     )
                 }
-                onFixPortion = {
-                        generosity ->
+                onFixPortionTen = { generosity ->
                     touchHandling(
-                        generosity, "Fix Portion"
+                        generosity, "Fix Portion 10"
                     )
                 }
-                onBenefits = {
-                        generosity ->
+                onFixPortionTwoFive = { generosity ->
+                    touchHandling(
+                        generosity, "Fix Portion 2.5"
+                    )
+                }
+                onBenefits = { generosity ->
                     touchHandling(
                         generosity, "Benefits"
                     )
@@ -583,6 +660,10 @@ class GenerosityUITests {
         assert(generosity.landingPage)
 
         composeTestRule.onNodeWithText("Daswandh Calculation").performClick()
+        composeTestRule.onNodeWithText("Back").performClick()
+        assert(generosity.landingPage)
+
+        composeTestRule.onNodeWithText("Zakat Calculation").performClick()
         composeTestRule.onNodeWithText("Back").performClick()
         assert(generosity.landingPage)
 

@@ -5,7 +5,8 @@
     <string name="app_name_pali">Dāna</string>
     <string name="button1">Benefits</string> //Benefits of Donation button
     <string name="button2">Daswandh Calculation</string> //Fix Portion
-    <string name="button3">Generosity Calculation</string>
+    <string name="button3">Zakat Calculation</string>
+    <string name="button4">Generosity Calculation</string>
 
     //Variable Portion Page
     //Calculation page
@@ -21,8 +22,11 @@
     <string name="level2">100x</string>
     <string name="level3">1000x</string>
 
-    //Fix Portion Page
+    //Fix Portion Ten Page
     <string name="sikhi_logo_description">Ik Onkar</string>
+
+    //Fix Portion Two Five Page
+    <string name="zakat_logo_description">Zakat</string>
 
     //Back Button
     <string name="back">Back</string>
