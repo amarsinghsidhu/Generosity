@@ -499,7 +499,7 @@ class GenerosityUITests {
                 onRoundUpTens = { generosity -> touchHandling(generosity, "Tens") }
             }
         }
-
+        composeTestRule.onNodeWithText("Income").performTextInput("18043")
         composeTestRule.onNodeWithText("10x").performClick()
         assert(generosity.roundUpTens)
     }
@@ -523,7 +523,7 @@ class GenerosityUITests {
                 }
             }
         }
-
+        composeTestRule.onNodeWithText("Income").performTextInput("18043")
         composeTestRule.onNodeWithText("100x").performClick()
         assert(generosity.roundUpHundreds)
     }
@@ -535,6 +535,7 @@ class GenerosityUITests {
         generosity.fixPortionTwoFive = false
         generosity.variablePortion = true
         generosity.benefitsPage = false
+        generosity.income = 18043.0
         composeTestRule.setContent {
             GenerosityTheme {
 
@@ -547,7 +548,7 @@ class GenerosityUITests {
                 }
             }
         }
-
+        composeTestRule.onNodeWithText("Income").performTextInput("18043")
         composeTestRule.onNodeWithText("1000x").performClick()
         assert(generosity.roundUpThousands)
     }

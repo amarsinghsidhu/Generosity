@@ -833,6 +833,7 @@ internal fun CalculationRendering(generosity: Generosity) {
                     label = R.string.level0,
                     action = { onRoundUpOnes(it) },
                     active = generosity.roundUpOnes,
+                    smallIncome = false,
                     modifier = Modifier
                         .weight(1f)
                 )
@@ -840,6 +841,7 @@ internal fun CalculationRendering(generosity: Generosity) {
                     label = R.string.level1,
                     action = { onRoundUpTens(it) },
                     active = generosity.roundUpTens,
+                    smallIncome = generosity.income < 10,
                     modifier = Modifier
                         .weight(1f)
                 )
@@ -853,6 +855,7 @@ internal fun CalculationRendering(generosity: Generosity) {
                     label = R.string.level2,
                     action = { onRoundUpHundreds(it) },
                     active = generosity.roundUpHundreds,
+                    smallIncome = generosity.income < 100,
                     modifier = Modifier
                         .weight(1f)
                 )
@@ -860,6 +863,7 @@ internal fun CalculationRendering(generosity: Generosity) {
                     label = R.string.level3,
                     action = { onRoundUpThousands(it) },
                     active = generosity.roundUpThousands,
+                    smallIncome = generosity.income < 1000,
                     modifier = Modifier
                         .weight(1f)
                 )
@@ -890,6 +894,7 @@ internal fun CalculationRendering(generosity: Generosity) {
             label = R.string.submit_button,
             action = { onCalculation(it) },
             active = false,
+            smallIncome = false,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
@@ -933,23 +938,29 @@ internal fun touchHandling(
             generosity.roundUpOnes = toggle(generosity.roundUpOnes)
         }
         "Tens" -> {
-            generosity.roundUpOnes = false
-            generosity.roundUpHundreds = false
-            generosity.roundUpThousands = false
-            generosity.roundUpTens = toggle(generosity.roundUpTens)
+            if (generosity.income > 10) {
+                generosity.roundUpOnes = false
+                generosity.roundUpHundreds = false
+                generosity.roundUpThousands = false
+                generosity.roundUpTens = toggle(generosity.roundUpTens)
+            }
         }
         "Hundreds" -> {
-            generosity.roundUpOnes = false
-            generosity.roundUpTens = false
-            generosity.roundUpThousands = false
-            generosity.roundUpHundreds = toggle(generosity.roundUpHundreds)
+            if (generosity.income > 100) {
+                generosity.roundUpOnes = false
+                generosity.roundUpTens = false
+                generosity.roundUpThousands = false
+                generosity.roundUpHundreds = toggle(generosity.roundUpHundreds)
+            }
 
         }
         "Thousands" -> {
-            generosity.roundUpOnes = false
-            generosity.roundUpTens = false
-            generosity.roundUpHundreds = false
-            generosity.roundUpThousands = toggle(generosity.roundUpThousands)
+            if (generosity.income > 1000) {
+                generosity.roundUpOnes = false
+                generosity.roundUpTens = false
+                generosity.roundUpHundreds = false
+                generosity.roundUpThousands = toggle(generosity.roundUpThousands)
+            }
         }
         "Benefits" -> {
             generosity.fixPortionTen = false
@@ -1046,25 +1057,25 @@ internal fun calculation(
     roundUpThousands: Boolean
 ): Double {
     var donation: Double
-    if (!roundUpOnes && !roundUpTens && !roundUpHundreds && !roundUpThousands) {
-        donation = income * (portion / 100)
-    } else if (roundUpOnes) {
+    if (roundUpOnes) {
         donation = income * (portion / 100)
         donation = ceil(donation)
-    } else if (roundUpTens) {
+    } else if (roundUpTens && income > 10) {
         donation = income * (portion / 100)
         donation = ceil(donation / 10) * 10
-    } else if (roundUpHundreds) {
+    } else if (roundUpHundreds && income > 100) {
         donation = income * (portion / 100)
         donation = ceil(donation / 100) * 100
-    } else {
+    } else if (roundUpThousands && income > 1000) {
         donation = income * (portion / 100)
         donation = ceil(donation / 1000) * 1000
+    } else {
+        donation = income * (portion / 100)
     }
     return donation
 }
 
-// Empty -> Generosity
+// () -> Generosity
 // Output of a state with a different color scheme randomly
 // Tests in the file "GenerosityTest.kt"
 
@@ -1158,7 +1169,7 @@ internal fun TextFieldModule(
             } else {
                 colorResource(R.color.umber_like)
             },
-            disabledContainerColor = colorResource(R.color.muted_gray),
+            disabledContainerColor = colorResource(R.color.gray),
             cursorColor = if (generosity.variablePortion) {
                 colorResource(generosity.buttonsTextColor)
             } else if (generosity.fixPortionTwoFive) {
@@ -1204,8 +1215,8 @@ internal fun TextFieldModule(
     )
 }
 
-// Int ((Generosity) -> Unit ) -> Unit
-// With input of a label from strings.xml as int and a lambda as action, output of an execution
+// Int Generosity ((Generosity) -> Unit ) -> Unit
+// With input of a label from strings.xml as int, class Generosity and a lambda as action, output of an execution
 // ready button
 // Tests in the GenerosityUITest.kt file
 
@@ -1214,6 +1225,7 @@ internal fun TextFieldModule(
 //        @StringRes label: int,
 //        action: (Generosity) -> Unit,
 //        active: Boolean
+//        smallIncome: Boolean
 //) {
 //        Text(text = "stub")
 //}
@@ -1223,6 +1235,7 @@ internal fun CalculationButtons(
     @StringRes label: Int,
     action: (Generosity) -> Unit,
     active: Boolean,
+    smallIncome: Boolean,
     modifier: Modifier
 ) {
     Button(
@@ -1234,14 +1247,18 @@ internal fun CalculationButtons(
                     colorResource(generosity.buttonsColor)
                 } else if (generosity.fixPortionTwoFive) {
                     colorResource(R.color.pale_moss)
+                } else if (smallIncome) {
+                    colorResource(R.color.gray)
                 } else {
                     colorResource(R.color.umber_like)
                 }
             } else {
-                if (generosity.colorMode)
+                if (generosity.colorMode && !smallIncome)
                     colorResource(R.color.black)
-                else
+                else if (!generosity.colorMode && !smallIncome)
                     colorResource(R.color.white)
+                else
+                    colorResource(R.color.gray)
             }
         ),
         modifier = modifier
@@ -1252,6 +1269,8 @@ internal fun CalculationButtons(
                 colorResource(generosity.buttonsTextColor)
             } else if (generosity.fixPortionTwoFive) {
                 colorResource(R.color.emerald_green)
+            } else if (smallIncome) {
+                colorResource(R.color.black)
             } else {
                 colorResource(R.color.saffron)
             },

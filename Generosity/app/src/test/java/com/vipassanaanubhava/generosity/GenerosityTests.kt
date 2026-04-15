@@ -168,6 +168,20 @@ class GenerosityTests {
     }
 
     @Test
+    fun calculation_roundUpThousands_smallIncome() {
+        val targetDonation = 20.0
+        val actualDonation = calculation(
+            200.0,
+            10.0,
+            false,
+            false,
+            false,
+            true
+        )
+        assertEquals(targetDonation, actualDonation, 0.0001)
+    }
+
+    @Test
     fun calculation_fixPortionTen_noRoundUp() {
         val targetDonation = 1804.3
         val actualDonation = calculation(
