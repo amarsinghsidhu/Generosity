@@ -23,10 +23,10 @@
     <string name="level3">1000x</string>
 
     //Fix Portion Ten Page
-    <string name="sikhi_logo_description">Ik Onkar</string>
+    <string name="sikhi_logo">ੴ</string>
 
     //Fix Portion Two Five Page
-    <string name="zakat_logo_description">Zakat</string>
+    <string name="zakat_logo">زكاة</string>
 
     //Back Button
     <string name="back">Back</string>
@@ -39,18 +39,24 @@
     <string name="title">A Gift With Six Factors</string>
     <string name="subtitle">Chaḷaṅgadānasutta</string>
     <string name="heading1">Six factors of a religious donation:</string>
+
+    // Card 1
     <string name="subheading1">1. Three factors of the donor</string>
     <string name="sh1_contents">
         a. Before Donation: Good Mood\n
         b. Whilst donation: Feeling of confidence\n
         c. After donation: Feeling of upliftment
     </string>
+
+    // Card 2
     <string name="subheading2">2. Three factors of the recipient</string>
     <string name="sh2_contents">
         a. No greed (or practice in progress for freedom from greed)\n
         b. No hatred (or practice in progress for freedom from hatred)\n
         c. No Delusion (or practice in progress for freedom from delusion)
     </string>
+
+    // Card 3
     <string name="heading2">Benefits:</string>
     <string name="h2_contents">
         Beyond calculation, measurement, a great mass of merit.\n

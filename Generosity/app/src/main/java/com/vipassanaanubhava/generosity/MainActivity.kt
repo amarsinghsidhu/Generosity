@@ -4,11 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,24 +20,24 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,394 +51,6 @@ import com.vipassanaanubhava.generosity.ui.theme.GenerosityTheme
 import org.jetbrains.annotations.VisibleForTesting
 import java.text.NumberFormat
 import kotlin.math.ceil
-
-//Data Definition Section
-//Compound data type declaration:
-class Generosity (
-    income: Double,
-    portion: Double,
-    donation: Double,
-    roundUpOnes: Boolean,
-    roundUpTens: Boolean,
-    roundUpHundreds: Boolean,
-    roundUpThousands: Boolean,
-    colorMode: Boolean,
-    @ColorRes backgroundColor: Int,
-    @ColorRes buttonsColor: Int,
-    @ColorRes buttonsTextColor: Int,
-    @ColorRes otherTextColor: Int,
-    landingPage: Boolean,
-    variablePortion: Boolean,
-    fixPortionTen: Boolean,
-    fixPortionTwoFive: Boolean,
-    benefitsPage: Boolean
-) {
-    var income by mutableDoubleStateOf(income)
-    var portion by mutableDoubleStateOf(portion)
-    var donation by mutableDoubleStateOf(donation)
-    var roundUpOnes by mutableStateOf(roundUpOnes)
-    var roundUpTens by mutableStateOf(roundUpTens)
-    var roundUpHundreds by mutableStateOf(roundUpHundreds)
-    var roundUpThousands by mutableStateOf(roundUpThousands)
-    var colorMode by mutableStateOf(colorMode)
-    var backgroundColor by mutableIntStateOf(backgroundColor)
-    var buttonsColor by mutableIntStateOf(buttonsColor)
-    var buttonsTextColor by mutableIntStateOf(buttonsTextColor)
-    var otherTextColor by mutableIntStateOf(otherTextColor)
-    var landingPage by mutableStateOf(landingPage)
-    var variablePortion by mutableStateOf(variablePortion)
-    var fixPortionTen by mutableStateOf(fixPortionTen)
-    var fixPortionTwoFive by mutableStateOf(fixPortionTwoFive)
-    var benefitsPage by mutableStateOf(benefitsPage)
-}
-// Generosity as
-//        val generosity: Generosity = Generosity(
-//                - Number[0, Infinite)
-//                - Number[0, 100]
-//                - Number[0, Infinite)
-//                - Boolean
-//                - Boolean
-//                - Boolean
-//                - Boolean
-//                - Boolean
-//                - Boolean
-//                - Boolean
-//                - Color [Random]
-//                - Color [Random]
-//                - Color [Random]
-//                - Color [Random]
-//                - Boolean
-//                - Boolean
-//                - Boolean
-//                - Boolean
-//                - Boolean
-//        )
-// Interpretation:
-//  - Income = 1000
-//  - Portion = 10
-//  - Donation Amount = 100
-//  - Round Up Level 1 (Upper 1's place) = false
-//  - Round Up Level 2 (Upper 10's place) = false
-//  - Round Up Level 3 (Upper 100's place) = false
-//  - Round Up Level 4 (Upper 1000's place) = false
-//  - Portion = [1, 100]
-//  - Portion = 10 (fix)
-//  - colorMode (true for light and false for dark) = true
-//  - background color = Ochre
-//  - Buttons color = Dark molasses
-//  - Button text color = Ochre
-//  - Other text color = Dark molasses
-//  - Landing Page of the app
-//  - Full Generosity calculation Page
-//  - Daswandh calculation Page
-//  - Zakat Calculation Page
-//  - Benefits of Generosity Page
-
-//Examples
-var generosity = Generosity(
-    income = 0.0,
-    portion = 0.0,
-    donation = 0.0,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = true,
-    backgroundColor = R.color.ochre,
-    buttonsColor = R.color.dark_molasses,
-    buttonsTextColor = R.color.ochre,
-    otherTextColor = R.color.dark_molasses,
-    landingPage = true,
-    variablePortion = true,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false
-)
-
-var generosity1 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1804.3,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = true,
-    backgroundColor = R.color.ochre,
-    buttonsColor = R.color.dark_molasses,
-    buttonsTextColor = R.color.ochre,
-    otherTextColor = R.color.dark_molasses,
-    landingPage = false,
-    variablePortion = true,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false
-)
-
-var generosity2 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1805.0,
-    roundUpOnes = true,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = true,
-    backgroundColor = R.color.ochre,
-    buttonsColor = R.color.dark_molasses,
-    buttonsTextColor = R.color.ochre,
-    otherTextColor = R.color.dark_molasses,
-    landingPage = false,
-    variablePortion = true,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false
-)
-
-var generosity3 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1810.0,
-    roundUpOnes = false,
-    roundUpTens = true,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = true,
-    backgroundColor = R.color.ochre,
-    buttonsColor = R.color.dark_molasses,
-    buttonsTextColor = R.color.ochre,
-    otherTextColor = R.color.dark_molasses,
-    landingPage = false,
-    variablePortion = true,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false
-)
-
-var generosity4 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1900.0,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = true,
-    roundUpThousands = false,
-    colorMode = true,
-    backgroundColor = R.color.ochre,
-    buttonsColor = R.color.dark_molasses,
-    buttonsTextColor = R.color.ochre,
-    otherTextColor = R.color.dark_molasses,
-    landingPage = false,
-    variablePortion = true,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false
-)
-
-var generosity5 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 2000.0,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = true,
-    colorMode = true,
-    backgroundColor = R.color.ochre,
-    buttonsColor = R.color.dark_molasses,
-    buttonsTextColor = R.color.ochre,
-    otherTextColor = R.color.dark_molasses,
-    landingPage = false,
-    variablePortion = true,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false
-)
-
-
-var generosityLightColor1 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1804.3,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = true,
-    backgroundColor = R.color.ochre,
-    buttonsColor = R.color.dark_molasses,
-    buttonsTextColor = R.color.ochre,
-    otherTextColor = R.color.dark_molasses,
-    landingPage = true,
-    variablePortion = false,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false
-)
-
-var generosityLightColor2 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1804.3,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = true,
-    backgroundColor = R.color.warm_cream,
-    buttonsColor = R.color.dark_molasses,
-    buttonsTextColor = R.color.warm_cream,
-    otherTextColor = R.color.dark_molasses,
-    landingPage = true,
-    variablePortion = false,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false,
-)
-
-var generosityLightColor3 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1804.3,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = true,
-    backgroundColor = R.color.saffron,
-    buttonsColor = R.color.umber_like,
-    buttonsTextColor = R.color.saffron,
-    otherTextColor = R.color.umber_like,
-    landingPage = true,
-    variablePortion = false,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false,
-)
-
-var generosityLightColor4 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1804.3,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = true,
-    backgroundColor = R.color.turmeric_yellow,
-    buttonsColor = R.color.deep_mahogany,
-    buttonsTextColor = R.color.turmeric_yellow,
-    otherTextColor = R.color.deep_mahogany,
-    landingPage = true,
-    variablePortion = false,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false,
-)
-
-var generosityDarkColor1 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1804.3,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = false,
-    backgroundColor = R.color.emerald_green,
-    buttonsColor = R.color.pale_moss,
-    buttonsTextColor = R.color.emerald_green,
-    otherTextColor = R.color.pale_moss,
-    landingPage = true,
-    variablePortion = false,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false,
-)
-
-var generosityDarkColor2 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1804.3,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = false,
-    backgroundColor = R.color.terracotta,
-    buttonsColor = R.color.peach_sand,
-    buttonsTextColor = R.color.terracotta,
-    otherTextColor = R.color.peach_sand,
-    landingPage = true,
-    variablePortion = false,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false,
-)
-
-var generosityDarkColor3 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1804.3,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = false,
-    backgroundColor = R.color.vermillion,
-    buttonsColor = R.color.blush_rose,
-    buttonsTextColor = R.color.vermillion,
-    otherTextColor = R.color.blush_rose,
-    landingPage = true,
-    variablePortion = false,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false,
-)
-
-var generosityDarkColor4 = Generosity(
-    income = 18043.0,
-    portion = 10.0,
-    donation = 1804.3,
-    roundUpOnes = false,
-    roundUpTens = false,
-    roundUpHundreds = false,
-    roundUpThousands = false,
-    colorMode = false,
-    backgroundColor = R.color.indigo,
-    buttonsColor = R.color.pale_sky,
-    buttonsTextColor = R.color.indigo,
-    otherTextColor = R.color.pale_sky,
-    landingPage = true,
-    variablePortion = false,
-    fixPortionTen = false,
-    fixPortionTwoFive = false,
-    benefitsPage = false,
-)
-
-/* Data Template
-fun fnForGenerosity(generosity: Generosity) {
-    ... generosity.income
-        generosity.portion
-        generosity.roundUpOnes
-        generosity.roundUpTens
-        generosity.roundUpHundreds
-        generosity.roundUpThousands
-        generosity.colorMode
-        generosity.backgroundColor
-        generosity.buttonsColor
-        generosity.lightColor
-        generosity.darkColor
-        generosity.landingPage
-        generosity.variablePortion
-        generosity.fixPortionTen
-        generosity.fixPortionTwoFive
-        generosity.benefitsPage
-}
-*/
-
-// Template rules in use:
-//  - compound: 16 fields
 
 // Functions definition section
 
@@ -458,7 +68,7 @@ fun fnForGenerosity(generosity: Generosity) {
 //                colorMode = true,
 //                backgroundColor = R.color.ochre,
 //                buttonsColor = R.color.dark_molasses,
-//                buttonsTextColor = R.color.ochre,
+//                buttonsTextColor = R.color.ochre,chatgpt misinterpreting the word as 'hunter' or gemini’s lack of elaboration on 'Dhātu Manasikāra.'
 //                otherTextColor = R.color.dark_molasses,
 //                landingPage = true
 //                variablePortion = false
@@ -479,14 +89,52 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GenerosityTopAppBar() {
+    CenterAlignedTopAppBar(
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.generosity_pixel_foreground),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(dimensionResource(R.dimen.image_size))
+                        .padding(dimensionResource(R.dimen.padding_small))
+                )
+                /*Text(
+                    text = stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.displayMedium
+                )*/
+            }
+        }
+    )
+}
+
 @Composable
 fun BigBang() {
     //Data "Generosity"
-    var generosity by remember {
-        mutableStateOf(randomColor())
-    }
+    //var generosity by remember { mutableStateOf(DataSource().listOfGenerosity) }
 
-    Render(generosity)
+    //val layoutDirection = LocalLayoutDirection.current
+
+    Scaffold(
+        topBar = {
+            GenerosityTopAppBar()
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(it)
+        ) {
+            Render(
+                generosity = DataSource().listOfGenerosity[0],
+                modifier = Modifier
+            )
+        }
+    }
 
     // Function touchHandling: Generosity keyEvent -> Generosity
     //KeyEvent
@@ -520,11 +168,14 @@ fun BigBang() {
 //}
 
 @Composable
-fun Render(generosity: Generosity) {
+fun Render(
+    generosity: Generosity,
+    modifier: Modifier
+) {
     if (generosity.landingPage) {
         IndexRendering(generosity)
     } else if (generosity.benefitsPage) {
-        BenefitsRendering()
+        BenefitsRendering(generosity = generosity)
     } else if (generosity.variablePortion) {
         CalculationRendering(generosity)
     } else if (generosity.fixPortionTen) {
@@ -546,54 +197,48 @@ fun IndexRendering(generosity: Generosity) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(generosity.backgroundColor))
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         Text(
             text = stringResource(R.string.app_name),
-            color = colorResource(generosity.otherTextColor),
-            fontSize = 48.sp,
+            style = MaterialTheme.typography.displayLarge,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
         Text(
             text = stringResource(R.string.app_name_pali),
-            color = colorResource(generosity.otherTextColor),
+            style = MaterialTheme.typography.headlineMedium,
             fontSize = 20.sp,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
         Spacer(modifier = Modifier.height(64.dp))
         NavigationButtons(
+            generosity = generosity,
             label = R.string.button1,
             action = { onBenefits(it) },
-            buttonsColor = generosity.buttonsColor,
-            textColor = generosity.buttonsTextColor,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
         NavigationButtons(
+            generosity = generosity,
             label = R.string.button2,
             action = { onFixPortionTen(it) },
-            buttonsColor = generosity.buttonsColor,
-            textColor = generosity.buttonsTextColor,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
         NavigationButtons(
+            generosity = generosity,
             label = R.string.button3,
             action = { onFixPortionTwoFive(it) },
-            buttonsColor = generosity.buttonsColor,
-            textColor = generosity.buttonsTextColor,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
         NavigationButtons(
+            generosity = generosity,
             label = R.string.button4,
             action = { onVariablePortion(it) },
-            buttonsColor = generosity.buttonsColor,
-            textColor = generosity.buttonsTextColor,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
@@ -609,112 +254,118 @@ fun IndexRendering(generosity: Generosity) {
 //}
 
 @Composable
-fun BenefitsRendering() {
+fun BenefitsRendering(generosity: Generosity) {
 
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(R.color.ochre))
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         Text(
             text = stringResource(R.string.title),
-            color = colorResource(R.color.dark_molasses),
-            fontSize = 28.sp,
+            style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
         Text(
             text = stringResource(R.string.subtitle),
-            color = colorResource(R.color.dark_molasses),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.ExtraLight,
+            style = MaterialTheme.typography.headlineMedium,
             textDecoration = TextDecoration.Underline,
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
-        Spacer(modifier = Modifier.height(64.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacer2_height)))
         Text(
             text = stringResource(R.string.heading1),
-            color = colorResource(R.color.dark_molasses),
+            style = MaterialTheme.typography.headlineSmall,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
 
         )
-        Text(
-            text = stringResource(R.string.subheading1),
-            color = colorResource(R.color.dark_molasses),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-        )
-        Text(
-            text = stringResource(R.string.sh1_contents),
-            color = colorResource(R.color.dark_molasses),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Light,
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-        )
-        Text(
-            text = stringResource(R.string.subheading2),
-            color = colorResource(R.color.dark_molasses),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-        )
-        Text(
-            text = stringResource(R.string.sh2_contents),
-            color = colorResource(R.color.dark_molasses),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Light,
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+
+        Card {
+            Text(
+                text = stringResource(R.string.subheading1),
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+            )
+            Text(
+                text = stringResource(R.string.sh1_contents),
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Light,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+            )
+        }
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacer1_height)))
+        Card {
+            Text(
+                text = stringResource(R.string.subheading2),
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+            )
+            Text(
+                text = stringResource(R.string.sh2_contents),
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Light,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+            )
+        }
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacer1_height)))
         Text(
             text = stringResource(R.string.heading2),
-            color = colorResource(R.color.dark_molasses),
+            style = MaterialTheme.typography.titleMedium,
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
-        Text(
-            text = stringResource(R.string.h2_contents),
-            color = colorResource(R.color.dark_molasses),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Light,
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-        )
-        Text(
-            text = stringResource(R.string.source),
-            color = colorResource(R.color.dark_molasses),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Thin,
-            textAlign = TextAlign.End,
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
 
-        )
+        Card {
+            Text(
+                text = stringResource(R.string.h2_contents),
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Light,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+            )
+            Text(
+                text = stringResource(R.string.source),
+                style = MaterialTheme.typography.labelMedium,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Thin,
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+
+            )
+        }
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacer1_height)))
         NavigationButtons(
+            generosity = generosity,
             label = R.string.back,
             action = { onBack(it) },
-            buttonsColor = R.color.dark_molasses,
-            textColor = R.color.ochre,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacer2_height)))
     }
 }
 
@@ -742,38 +393,22 @@ internal fun CalculationRendering(generosity: Generosity) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = if (generosity.variablePortion) {
-                    colorResource(generosity.backgroundColor)
-                } else if (generosity.fixPortionTwoFive) {
-                    colorResource(R.color.emerald_green)
-                } else {
-                    colorResource(R.color.saffron)
-                }
-            )
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         if (generosity.fixPortionTen) {
-            Image(
-                painter = painterResource(R.drawable.ikonkar),
-                contentDescription = stringResource(R.string.sikhi_logo_description),
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .size(120.dp)
+            Text(
+                text = stringResource(R.string.sikhi_logo),
+                style = MaterialTheme.typography.headlineLarge
             )
         } else if (generosity.fixPortionTwoFive) {
-            Image(
-                painter = painterResource(R.drawable.zakat_icon),
-                contentDescription = stringResource(R.string.zakat_logo_description),
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .size(120.dp)
+            Text(
+               text = stringResource(R.string.zakat_logo),
+                style = MaterialTheme.typography.headlineLarge
             )
         } else {
             Text(
                 text = stringResource(R.string.app_action_label),
-                color = colorResource(generosity.otherTextColor),
                 fontSize = 16.sp,
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
@@ -787,7 +422,8 @@ internal fun CalculationRendering(generosity: Generosity) {
             // newValue -> generosity.income = newValue
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
-                imeAction = if (!generosity.fixPortionTen && !generosity.fixPortionTwoFive) ImeAction.Next else ImeAction.Done
+                imeAction = if (!generosity.fixPortionTen && !generosity.fixPortionTwoFive)
+                    ImeAction.Next else ImeAction.Done
             ),
             enabled = true
         )
@@ -813,13 +449,6 @@ internal fun CalculationRendering(generosity: Generosity) {
         ) {
             Text(
                 text = "Amount Round Up?",
-                color = if (generosity.variablePortion) {
-                    colorResource(generosity.otherTextColor)
-                } else if (generosity.fixPortionTwoFive){
-                    colorResource(R.color.pale_moss)
-                } else {
-                    colorResource(R.color.umber_like)
-                },
                 fontSize = 12.sp,
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
@@ -830,17 +459,17 @@ internal fun CalculationRendering(generosity: Generosity) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 CalculationButtons(
+                    generosity = generosity,
                     label = R.string.level0,
                     action = { onRoundUpOnes(it) },
-                    active = generosity.roundUpOnes,
                     smallIncome = false,
                     modifier = Modifier
                         .weight(1f)
                 )
                 CalculationButtons(
+                    generosity = generosity,
                     label = R.string.level1,
                     action = { onRoundUpTens(it) },
-                    active = generosity.roundUpTens,
                     smallIncome = generosity.income < 10,
                     modifier = Modifier
                         .weight(1f)
@@ -852,17 +481,17 @@ internal fun CalculationRendering(generosity: Generosity) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 CalculationButtons(
+                    generosity = generosity,
                     label = R.string.level2,
                     action = { onRoundUpHundreds(it) },
-                    active = generosity.roundUpHundreds,
                     smallIncome = generosity.income < 100,
                     modifier = Modifier
                         .weight(1f)
                 )
                 CalculationButtons(
+                    generosity = generosity,
                     label = R.string.level3,
                     action = { onRoundUpThousands(it) },
-                    active = generosity.roundUpThousands,
                     smallIncome = generosity.income < 1000,
                     modifier = Modifier
                         .weight(1f)
@@ -877,13 +506,6 @@ internal fun CalculationRendering(generosity: Generosity) {
                     .format(generosity.donation),
 
                 ),
-            color = if (generosity.variablePortion) {
-                colorResource(generosity.otherTextColor)
-            } else if (generosity.fixPortionTwoFive) {
-                colorResource(R.color.pale_moss)
-            } else {
-                colorResource(R.color.umber_like)
-            },
             fontSize = 20.sp,
             fontFamily = MaterialTheme.typography.headlineMedium.fontFamily,
             modifier = Modifier
@@ -891,30 +513,17 @@ internal fun CalculationRendering(generosity: Generosity) {
                 .padding(top = 16.dp)
         )
         CalculationButtons(
+            generosity = generosity,
             label = R.string.submit_button,
             action = { onCalculation(it) },
-            active = false,
             smallIncome = false,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
         NavigationButtons(
+            generosity = generosity,
             label = R.string.back,
             action = { onBack(it) },
-            buttonsColor = if (generosity.variablePortion) {
-                generosity.buttonsColor
-            } else if (generosity.fixPortionTwoFive) {
-                R.color.pale_moss
-            } else {
-                R.color.umber_like
-            },
-            textColor = if (generosity.variablePortion) {
-                generosity.buttonsTextColor
-            } else if (generosity.fixPortionTwoFive) {
-                R.color.emerald_green
-            } else {
-                R.color.saffron
-            },
             modifier = Modifier
                 .fillMaxWidth(0.8f)
         )
@@ -1031,7 +640,7 @@ internal fun toggle(roundUpOption: Boolean): Boolean {
     return roundUpOption
 }
 
-// Double Double Boolean Boolean Boolean Boolean -> Double
+// Double, Double, Boolean, Boolean, Boolean, Boolean -> Double
 // With income, portion, roundUp, roundUpTens, roundUpHundreds and roundUpThousands as input,
 // output of Donation Amount
 // Tests in the file "GenerosityTest.kt"
@@ -1075,34 +684,6 @@ internal fun calculation(
     return donation
 }
 
-// () -> Generosity
-// Output of a state with a different color scheme randomly
-// Tests in the file "GenerosityTest.kt"
-
-//fun randomColor() {
-//            return generosity.backgroundColor = R.color.black
-//            return generosity.buttonsColor = R.color.black
-//            return generosity.lightColor = R.color.black
-//            return generosity.darkColor = R.color.black
-//}
-@VisibleForTesting
-internal fun randomColor(): Generosity {
-    val generosityInstance = (1..8).random()
-    generosity = when (generosityInstance) {
-        1 -> generosityLightColor1
-        2 -> generosityLightColor2
-        3 -> generosityLightColor3
-        4 -> generosityLightColor4
-        5 -> generosityDarkColor1
-        6 -> generosityDarkColor2
-        7 -> generosityDarkColor3
-        else -> generosityDarkColor4
-    }
-    generosity.donation = 0.0
-    return generosity
-}
-
-
 // Int String ((String) -> Unit) -> Image
 // With a label, A value in text and a lambda(newValue -> Unit) as input, output of text field as
 // image
@@ -1130,85 +711,20 @@ internal fun TextFieldModule(
     TextField(
         label = {
             Text(
-                text = stringResource(label),
-                color = if (generosity.variablePortion) {
-                    colorResource(generosity.buttonsTextColor)
-                } else if (generosity.fixPortionTwoFive) {
-                    colorResource(R.color.emerald_green)
-                } else {
-                    colorResource(R.color.saffron)
-                }
+                text = stringResource(label)
             )
         },
         leadingIcon = {
             Icon(
                 painter = painterResource(leadingIcon),
-                contentDescription = null,
-                tint = if (generosity.variablePortion) {
-                    colorResource(generosity.buttonsTextColor)
-                } else if (generosity.fixPortionTwoFive) {
-                    colorResource(R.color.emerald_green)
-                } else {
-                    colorResource(R.color.saffron)
-                }
+                contentDescription = null
             )
         },
         value = value,
         onValueChange = onValueChange,
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = if (generosity.colorMode)
-                colorResource(R.color.black)
-            else
-                colorResource(R.color.white),
-            unfocusedContainerColor = if (generosity.variablePortion) {
-                colorResource(generosity.buttonsColor)
-            } else if (generosity.fixPortionTwoFive) {
-                colorResource(R.color.pale_moss)
-            } else {
-                colorResource(R.color.umber_like)
-            },
-            disabledContainerColor = colorResource(R.color.gray),
-            cursorColor = if (generosity.variablePortion) {
-                colorResource(generosity.buttonsTextColor)
-            } else if (generosity.fixPortionTwoFive) {
-                colorResource(R.color.emerald_green)
-            } else {
-                colorResource(R.color.saffron)
-            },
-            focusedLabelColor = if (generosity.variablePortion) {
-                colorResource(generosity.buttonsTextColor)
-            } else if (generosity.fixPortionTwoFive) {
-                colorResource(R.color.emerald_green)
-            } else {
-                colorResource(R.color.saffron)
-            },
-            focusedTextColor = if (generosity.variablePortion) {
-                colorResource(generosity.buttonsTextColor)
-            } else if (generosity.fixPortionTwoFive) {
-                colorResource(R.color.emerald_green)
-            } else {
-                colorResource(R.color.saffron)
-            },
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            unfocusedTextColor = if (generosity.variablePortion) {
-                colorResource(generosity.buttonsTextColor)
-            } else if (generosity.fixPortionTwoFive) {
-                colorResource(R.color.emerald_green)
-            } else {
-                colorResource(R.color.saffron)
-            },
-            unfocusedLabelColor = if (generosity.variablePortion) {
-                colorResource(generosity.buttonsTextColor)
-            } else if (generosity.fixPortionTwoFive) {
-                colorResource(R.color.emerald_green)
-            } else {
-                colorResource(R.color.saffron)
-            }
-        ),
+        shape = MaterialTheme.shapes.small,
         enabled = enabled,
         modifier = Modifier
             .fillMaxWidth(0.8f)
@@ -1216,7 +732,8 @@ internal fun TextFieldModule(
 }
 
 // Int Generosity ((Generosity) -> Unit ) -> Unit
-// With input of a label from strings.xml as int, class Generosity and a lambda as action, output of an execution
+// With input of a label from strings.xml as int, class Generosity and a lambda as action,
+// output of an execution
 // ready button
 // Tests in the GenerosityUITest.kt file
 
@@ -1232,48 +749,22 @@ internal fun TextFieldModule(
 
 @Composable
 internal fun CalculationButtons(
+    generosity: Generosity,
     @StringRes label: Int,
     action: (Generosity) -> Unit,
-    active: Boolean,
     smallIncome: Boolean,
     modifier: Modifier
 ) {
     Button(
         onClick = { action(generosity) },
-        shape = RectangleShape,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (!active) {
-                if (generosity.variablePortion) {
-                    colorResource(generosity.buttonsColor)
-                } else if (generosity.fixPortionTwoFive) {
-                    colorResource(R.color.pale_moss)
-                } else if (smallIncome) {
-                    colorResource(R.color.gray)
-                } else {
-                    colorResource(R.color.umber_like)
-                }
-            } else {
-                if (generosity.colorMode && !smallIncome)
-                    colorResource(R.color.black)
-                else if (!generosity.colorMode && !smallIncome)
-                    colorResource(R.color.white)
-                else
-                    colorResource(R.color.gray)
-            }
-        ),
+        shape = MaterialTheme.shapes.small,
+        enabled = !smallIncome,
         modifier = modifier
+            .clip(MaterialTheme.shapes.small)
     ) {
         Text(
             text = stringResource(label),
-            color = if (generosity.variablePortion) {
-                colorResource(generosity.buttonsTextColor)
-            } else if (generosity.fixPortionTwoFive) {
-                colorResource(R.color.emerald_green)
-            } else if (smallIncome) {
-                colorResource(R.color.black)
-            } else {
-                colorResource(R.color.saffron)
-            },
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -1293,22 +784,20 @@ internal fun CalculationButtons(
 
 @Composable
 internal fun NavigationButtons(
+    generosity: Generosity,
     @StringRes label: Int,
     action: (Generosity) -> Unit,
-    @ColorRes buttonsColor: Int,
-    @ColorRes textColor: Int,
     modifier: Modifier
 ) {
     Button(
         onClick = { action(generosity) },
-        shape = RectangleShape,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(buttonsColor)),
+        shape = MaterialTheme.shapes.small,
         modifier = modifier
+            .clip(MaterialTheme.shapes.small)
     ) {
         Text(
             text = stringResource(label),
-            color = colorResource(textColor),
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
